@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="stampGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95"/>
+      <stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:0.9"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#4338ca" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="16" y="16" width="480" height="480" rx="96" ry="96" fill="url(#bgGrad)"/>
+
+  <!-- Photo frame (rounded rectangle) -->
+  <rect x="96" y="112" width="320" height="256" rx="24" ry="24"
+        fill="none" stroke="url(#stampGrad)" stroke-width="16" stroke-linejoin="round"
+        filter="url(#shadow)"/>
+
+  <!-- Mountain landscape inside the photo -->
+  <polygon points="96,340 196,248 256,296 336,208 416,340"
+           fill="rgba(255,255,255,0.15)"/>
+
+  <!-- Sun in photo -->
+  <circle cx="340" cy="172" r="28" fill="rgba(255,255,255,0.25)"/>
+
+  <!-- Stamp/seal circle (bottom-right, overlapping the photo) -->
+  <circle cx="370" cy="330" r="72" fill="url(#stampGrad)" filter="url(#shadow)" opacity="0.95"/>
+
+  <!-- Stamp inner ring -->
+  <circle cx="370" cy="330" r="58" fill="none" stroke="#6366f1" stroke-width="4" opacity="0.6"/>
+
+  <!-- Chinese character 印 inside the stamp -->
+  <text x="370" y="347" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif"
+        font-size="56" font-weight="700" fill="#6366f1" opacity="0.85">印</text>
+
+  <!-- Water drop accent (top-left of stamp) -->
+  <path d="M152,368 Q152,344 168,332 Q184,344 184,368 Q184,382 168,382 Q152,382 152,368 Z"
+        fill="rgba(255,255,255,0.7)"/>
+</svg>

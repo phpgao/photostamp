@@ -1,0 +1,77 @@
+{
+  "name": "photostamp",
+  "version": "1.0.0",
+  "description": "A cross-platform batch photo watermarking tool with EXIF time, GPS location, child age, and custom text support.",
+  "author": "jimmy",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --log-level=debug",
+    "prepack": "node scripts/obfuscate.js",
+    "postpack": "node scripts/obfuscate.js restore",
+    "build": "npm run prepack && electron-builder ; npm run postpack",
+    "build:mac": "npm run prepack && electron-builder --mac ; npm run postpack",
+    "build:win": "npm run prepack && electron-builder --win ; npm run postpack",
+    "build:linux": "npm run prepack && electron-builder --linux ; npm run postpack"
+  },
+  "build": {
+    "appId": "com.photostamp.app",
+    "productName": "印迹",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "node_modules/**/*",
+      "!scripts/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.photography",
+      "icon": "assets/icon.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.png",
+      "uninstallerIcon": "assets/icon.png"
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Graphics"
+    },
+    "publish": null
+  },
+  "dependencies": {
+    "exifreader": "^4.36.1",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "electron": "^40.4.0",
+    "electron-builder": "^26.7.0",
+    "javascript-obfuscator": "^4.1.1"
+  }
+}

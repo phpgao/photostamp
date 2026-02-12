@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>印迹 - PhotoStamp</title>
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="title-bar">
+      <span class="title-text" data-i18n="appTitle">印迹</span>
+      <div class="title-bar-actions">
+        <button class="theme-toggle" id="btnThemeToggle" title="Toggle Theme">
+          <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg id="themeIconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <svg id="themeIconAuto" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M12 2a10 10 0 010 20" fill="currentColor" opacity="0.3"/></svg>
+        </button>
+        <button class="icon-btn" id="btnOpenSettings" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+        <div class="lang-switcher">
+          <button class="lang-btn active" data-lang="zh">中</button>
+          <button class="lang-btn" data-lang="en">En</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== MAIN PAGE ========== -->
+    <div class="main-layout" id="mainPage">
+      <aside class="sidebar" id="sidebar">
+        <!-- Photo Selection -->
+        <div class="panel-section">
+          <h3 class="section-title" data-i18n="photoSelect">照片选择</h3>
+          <button class="btn btn-primary btn-block" id="btnSelectPhotos">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <span data-i18n="selectPhotos">选择照片</span>
+          </button>
+          <div class="file-count" id="fileCount" data-i18n="noPhotos">未选择照片</div>
+        </div>
+
+        <!-- Date Time -->
+        <div class="panel-section">
+          <label class="toggle-row">
+            <input type="checkbox" id="chkDateTime" checked>
+            <span class="toggle-label" data-i18n="shootTime">拍摄时间</span>
+          </label>
+          <div class="sub-options" id="dateTimeOptions">
+            <label class="field-label" data-i18n="timeFormat">时间格式</label>
+            <select id="selDateFormat" class="input-field">
+              <option value="YYYY-MM-DD HH:mm">2024-01-15 14:30</option>
+              <option value="YYYY/MM/DD HH:mm">2024/01/15 14:30</option>
+              <option value="YYYY年MM月DD日 HH:mm">2024年01月15日 14:30</option>
+              <option value="YYYY年MM月DD日">2024年01月15日</option>
+              <option value="MM/DD/YYYY">01/15/2024</option>
+              <option value="YYYY.MM.DD">2024.01.15</option>
+              <option value="custom" data-i18n-text="custom">自定义...</option>
+            </select>
+            <input type="text" id="txtCustomDateFmt" class="input-field hidden" data-i18n-placeholder="customDatePlaceholder" placeholder="如: YYYY年M月D日 HH:mm:ss">
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="panel-section">
+          <label class="toggle-row">
+            <input type="checkbox" id="chkLocation">
+            <span class="toggle-label" data-i18n="shootLocation">拍摄地点</span>
+          </label>
+          <div class="sub-options hidden" id="locationOptions">
+            <label class="field-label" data-i18n="displayMode">显示方式</label>
+            <select id="selLocationMode" class="input-field">
+              <option value="address" data-i18n-text="locationName">地理位置名称</option>
+              <option value="coords" data-i18n-text="gpsCoords">GPS 坐标</option>
+              <option value="custom" data-i18n-text="customLocation">自定义位置</option>
+            </select>
+
+            <div id="addressOptions">
+              <label class="field-label" data-i18n="addressLevel">地址精度</label>
+              <select id="selLocationLevel" class="input-field">
+                <option value="city" data-i18n-text="levelCity">市级</option>
+                <option value="district" data-i18n-text="levelDistrict">区级</option>
+                <option value="street" selected data-i18n-text="levelStreet">街道</option>
+              </select>
+
+              <label class="field-label" data-i18n="mapService">地图服务</label>
+              <select id="selGeoProvider" class="input-field">
+                <option value="auto" selected data-i18n-text="mapAuto">自动（根据设置）</option>
+              </select>
+              <div class="hint-text" id="providerHint"></div>
+
+              <label class="toggle-row toggle-row-sm">
+                <input type="checkbox" id="chkHideProvince">
+                <span class="toggle-label" data-i18n="hideProvince">隐藏省/州信息</span>
+              </label>
+            </div>
+
+            <div id="customLocationOptions" class="sub-options hidden">
+              <label class="field-label" data-i18n="customLocationText">自定义位置文本</label>
+              <input type="text" id="txtCustomLocation" class="input-field" data-i18n-placeholder="customLocationPlaceholder" placeholder="如: 北京市朝阳区, Tokyo, Japan">
+              <div class="hint-text" data-i18n="customLocationHint">当照片没有位置信息时使用此文本作为位置</div>
+            </div>
+
+            <label class="field-label" data-i18n="locationPrefix">位置前缀</label>
+            <input type="text" id="txtLocationPrefix" class="input-field" value="📍" data-i18n-placeholder="locationPrefixPlaceholder" placeholder="留空则无前缀，默认📍">
+          </div>
+        </div>
+
+        <!-- Baby Age -->
+        <div class="panel-section">
+          <label class="toggle-row">
+            <input type="checkbox" id="chkChildAge">
+            <span class="toggle-label" data-i18n="childAge">宝宝年龄</span>
+          </label>
+          <div class="sub-options hidden" id="childAgeOptions">
+            <label class="field-label" data-i18n="birthday">出生日期</label>
+            <input type="date" id="txtBirthday" class="input-field">
+            
+            <label class="field-label" data-i18n="ageFormat">显示格式</label>
+            <select id="selAgeFormat" class="input-field">
+              <option value="years" data-i18n-text="ageYears">X岁</option>
+              <option value="years-months" selected data-i18n-text="ageYearsMonths">X岁X个月</option>
+              <option value="years-months-days" data-i18n-text="ageYearsMonthsDays">X岁X个月X天</option>
+            </select>
+
+            <label class="field-label" data-i18n="agePrefix">前缀文字</label>
+            <input type="text" id="txtAgePrefix" class="input-field" data-i18n-placeholder="agePrefixPlaceholder" placeholder="如: 宝宝">
+          </div>
+        </div>
+
+        <!-- Custom text -->
+        <div class="panel-section">
+          <label class="field-label" data-i18n="customTextLabel">自定义文本</label>
+          <input type="text" id="txtCustomText" class="input-field" data-i18n-placeholder="customTextPlaceholder" placeholder="额外水印文字">
+        </div>
+
+        <!-- Style -->
+        <div class="panel-section">
+          <h3 class="section-title" data-i18n="watermarkStyle">水印样式</h3>
+
+          <label class="field-label" data-i18n="fontFamily">字体</label>
+          <select id="selFontFamily" class="input-field">
+            <option value="" data-i18n-text="defaultFont">默认字体</option>
+          </select>
+
+          <div class="font-style-group">
+            <button class="font-style-btn" id="btnBold" title="Bold" data-i18n-title="fontBold">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h8a5 5 0 0 1 3.5 8.5A5.5 5.5 0 0 1 15 21H6V4zm3 3v4h5a2 2 0 1 0 0-4H9zm0 7v4h6a2.5 2.5 0 1 0 0-5H9z"/></svg>
+            </button>
+            <button class="font-style-btn" id="btnItalic" title="Italic" data-i18n-title="fontItalic">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 5h6M8 19h6M14.5 5L9.5 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+            </button>
+          </div>
+
+          <label class="field-label" data-i18n="fontColor">字体颜色</label>
+          <div class="color-picker-row">
+            <input type="color" id="colorPicker" value="#FFFFFF" class="color-input">
+            <input type="text" id="txtColor" class="input-field input-sm" value="#FFFFFF">
+          </div>
+
+          <label class="field-label" data-i18n="opacity">不透明度</label>
+          <div class="range-row">
+            <input type="range" id="rangeOpacity" min="0.1" max="1" step="0.05" value="0.85">
+            <span id="opacityVal">85%</span>
+          </div>
+
+          <label class="field-label" data-i18n="fontSize">字体大小</label>
+          <div class="range-row">
+            <input type="range" id="rangeFontSize" min="0" max="120" step="2" value="0">
+            <span id="fontSizeVal" data-i18n="fontSizeAuto">自动</span>
+          </div>
+
+          <label class="field-label" data-i18n="strokeWidth">描边大小</label>
+          <div class="range-row">
+            <input type="range" id="rangeStrokeWidth" min="0" max="12" step="1" value="0">
+            <span id="strokeWidthVal" data-i18n="strokeWidthNone">无</span>
+          </div>
+
+          <div class="sub-options hidden" id="strokeColorRow">
+            <label class="field-label" data-i18n="strokeColor">描边颜色</label>
+            <div class="color-picker-row">
+              <input type="color" id="strokeColorPicker" value="#000000" class="color-input">
+              <input type="text" id="txtStrokeColor" class="input-field input-sm" value="#000000">
+            </div>
+          </div>
+
+          <label class="field-label" data-i18n="shadowEffect">阴影效果</label>
+          <select id="selShadowEffect" class="input-field">
+            <option value="none" data-i18n-text="shadowNone">无</option>
+            <option value="light" data-i18n-text="shadowLight">轻微</option>
+            <option value="medium" selected data-i18n-text="shadowMedium">中等</option>
+            <option value="strong" data-i18n-text="shadowStrong">强烈</option>
+          </select>
+
+          <label class="field-label" data-i18n="position">水印位置</label>
+          <div class="position-grid">
+            <button class="pos-btn" data-pos="top-left">↖</button>
+            <button class="pos-btn" data-pos="top-right">↗</button>
+            <button class="pos-btn" data-pos="center">◎</button>
+            <button class="pos-btn active" data-pos="bottom-left">↙</button>
+            <button class="pos-btn" data-pos="bottom-right">↘</button>
+          </div>
+
+          <label class="field-label" data-i18n="textAlign">文本对齐</label>
+          <div class="align-group">
+            <button class="align-btn active" data-align="left" title="Left">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+              <span data-i18n-text="alignLeft">左对齐</span>
+            </button>
+            <button class="align-btn" data-align="center" title="Center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+              <span data-i18n-text="alignCenter">居中</span>
+            </button>
+            <button class="align-btn" data-align="right" title="Right">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+              <span data-i18n-text="alignRight">右对齐</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div class="panel-section">
+          <h3 class="section-title" data-i18n="outputSettings">输出设置</h3>
+          <label class="field-label" data-i18n="outputFormat">输出格式</label>
+          <select id="selOutputFormat" class="input-field">
+            <option value="jpeg" selected>JPEG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WebP</option>
+          </select>
+          <label class="field-label" data-i18n="outputQuality">输出质量</label>
+          <div class="range-row">
+            <input type="range" id="rangeQuality" min="50" max="100" step="1" value="92">
+            <span id="qualityVal">92%</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right: Preview & Actions -->
+      <main class="content-area">
+        <div class="preview-panel" id="previewPanel">
+          <div class="preview-placeholder" id="previewPlaceholder">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="m21 15-5-5L5 21"/>
+            </svg>
+            <p data-i18n="placeholderText">选择照片后预览水印效果</p>
+            <p class="drop-hint" data-i18n="dropHint">拖放照片到此处</p>
+          </div>
+          <div class="preview-container hidden" id="previewContainer">
+            <img id="previewImage" class="preview-img" alt="Preview">
+          </div>
+        </div>
+
+        <!-- Zoom controls -->
+        <div class="zoom-bar hidden" id="zoomBar">
+          <button class="zoom-btn" id="btnZoomOut" title="Zoom Out">−</button>
+          <span class="zoom-level" id="zoomLevel">100%</span>
+          <button class="zoom-btn" id="btnZoomIn" title="Zoom In">+</button>
+          <button class="zoom-btn" id="btnZoomReset" title="Reset">⟲</button>
+          <span class="zoom-tip" data-i18n="zoomTip">滚轮缩放 · 拖拽移动 · 双击还原</span>
+        </div>
+
+        <!-- Thumbnail strip -->
+        <div class="thumbnail-strip hidden" id="thumbnailStrip"></div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+          <button class="btn btn-ghost" id="btnPreview" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span data-i18n="preview">预览</span>
+          </button>
+          <div class="spacer"></div>
+          <label class="action-check" id="labelOpenFolder">
+            <input type="checkbox" id="chkOpenFolder" checked>
+            <span data-i18n="openFolderAfter">完成后打开文件夹</span>
+          </label>
+          <button class="btn btn-accent btn-lg" id="btnProcess" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            <span data-i18n="batchProcess">批量添加水印</span>
+          </button>
+        </div>
+
+        <!-- Progress overlay -->
+        <div class="progress-overlay hidden" id="progressOverlay">
+          <div class="progress-card">
+            <h3 data-i18n="processing">正在处理...</h3>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <p class="progress-text" id="progressText">0 / 0</p>
+            <p class="progress-file" id="progressFile"></p>
+          </div>
+        </div>
+
+        <!-- Result overlay -->
+        <div class="result-overlay hidden" id="resultOverlay">
+          <div class="result-card">
+            <div class="result-icon" id="resultIcon">✓</div>
+            <h3 id="resultTitle" data-i18n="done">处理完成</h3>
+            <p id="resultText"></p>
+            <button class="btn btn-primary" id="btnCloseResult" data-i18n-text="confirm">确定</button>
+          </div>
+        </div>
+
+        <!-- Overwrite confirmation overlay -->
+        <div class="result-overlay hidden" id="overwriteOverlay">
+          <div class="result-card overwrite-card">
+            <div class="result-icon" style="color: var(--warning)">⚠</div>
+            <h3 id="overwriteTitle" data-i18n="overwriteTitle">文件已存在</h3>
+            <p id="overwriteText"></p>
+            <div class="overwrite-file-list" id="overwriteFileList"></div>
+            <div class="overwrite-actions">
+              <button class="btn btn-accent" id="btnOverwrite" data-i18n-text="overwriteBtn">覆盖</button>
+              <button class="btn btn-primary" id="btnSkipExisting" data-i18n-text="skipBtn">跳过已有</button>
+              <button class="btn btn-ghost" id="btnCancelProcess" data-i18n-text="cancelBtn">取消</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ========== SETTINGS PAGE ========== -->
+    <div class="settings-page hidden" id="settingsPage">
+      <div class="settings-container">
+        <div class="settings-header">
+          <button class="btn btn-ghost" id="btnBackToMain">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span data-i18n="backToMain">返回</span>
+          </button>
+          <h2 data-i18n="settingsTitle">设置</h2>
+          <div class="settings-header-spacer"></div>
+        </div>
+
+        <div class="settings-body">
+          <!-- Provider tokens -->
+          <div class="settings-section">
+            <h3 class="settings-section-title" data-i18n="providerTokens">服务商配置</h3>
+            <p class="settings-section-desc" data-i18n="providerTokensDesc">配置地理位置服务商的 API Key / Token</p>
+
+            <!-- Global Providers -->
+            <h4 class="token-group-title" data-i18n="providerGroupGlobal">🌍 全球化 (Global)</h4>
+            <div class="token-grid">
+              <!-- Google Maps -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameGoogle">Google Maps</span>
+                  <span class="token-status" id="statusGoogle" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingGoogleKey" class="input-field token-input" data-i18n-placeholder="googleKeyPlaceholder" placeholder="填写 Google Maps API Key" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="google" data-input="settingGoogleKey" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://console.cloud.google.com/apis/dashboard" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultGoogle"></div>
+              </div>
+
+              <!-- Mapbox -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameMapbox">Mapbox</span>
+                  <span class="token-status" id="statusMapbox" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingMapboxToken" class="input-field token-input" data-i18n-placeholder="mapboxTokenPlaceholder" placeholder="填写 Mapbox Access Token" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="mapbox" data-input="settingMapboxToken" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://console.mapbox.com/account/statistics/" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultMapbox"></div>
+              </div>
+
+              <!-- MapTiler -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameMaptiler">MapTiler</span>
+                  <span class="token-status" id="statusMaptiler" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingMaptilerKey" class="input-field token-input" data-i18n-placeholder="maptilerKeyPlaceholder" placeholder="填写 MapTiler API Key" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="maptiler" data-input="settingMaptilerKey" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://cloud.maptiler.com/account/analytics?chart=bar&classifier=services&period=current_billing_period&group=request" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultMaptiler"></div>
+              </div>
+            </div>
+
+            <!-- CN Providers -->
+            <h4 class="token-group-title" data-i18n="providerGroupCN">🇨🇳 中国 (CN)</h4>
+            <div class="token-grid">
+              <!-- Amap -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameAmap">高德地图 (Amap)</span>
+                  <span class="token-status" id="statusAmap" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingAmapKey" class="input-field token-input" data-i18n-placeholder="amapKeyPlaceholder" placeholder="填写高德地图 Web 服务 API Key" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="amap" data-input="settingAmapKey" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://console.amap.com/dev/flow/manage" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultAmap"></div>
+              </div>
+
+              <!-- Tencent -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameTencent">腾讯位置服务 (Tencent LBS)</span>
+                  <span class="token-status" id="statusTencent" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingTencentKey" class="input-field token-input" data-i18n-placeholder="tencentKeyPlaceholder" placeholder="填写腾讯位置服务 Key" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="tencent" data-input="settingTencentKey" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://lbs.qq.com/dev/console/quota/account" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultTencent"></div>
+              </div>
+
+              <!-- Tianditu -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameTianditu">天地图 (Tianditu)</span>
+                  <span class="token-status" id="statusTianditu" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingTiandituToken" class="input-field token-input" data-i18n-placeholder="tiandituTokenPlaceholder" placeholder="填写天地图 API Token" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="tianditu" data-input="settingTiandituToken" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://cloudcenter.tianditu.gov.cn/center/development/quota" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultTianditu"></div>
+              </div>
+
+              <!-- QWeather -->
+              <div class="token-card">
+                <div class="token-card-header">
+                  <span class="token-provider-name" data-i18n="providerNameQweather">和风天气 (QWeather)</span>
+                  <span class="token-status" id="statusQweather" data-i18n="tokenNotConfigured">未配置</span>
+                </div>
+                <div class="token-input-row">
+                  <input type="text" id="settingQweatherKey" class="input-field token-input" data-i18n-placeholder="qweatherKeyPlaceholder" placeholder="填写和风天气 API Key" autocomplete="off">
+                  <button class="btn btn-sm btn-test" data-provider="qweather" data-input="settingQweatherKey" data-i18n-text="testBtn">测试</button>
+                  <button class="btn btn-sm btn-test btn-quota" data-href="https://console.qweather.com/#/apps" data-i18n-text="quotaBtn">用量</button>
+                </div>
+                <div class="token-test-result hidden" id="testResultQweather"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Home Country Settings -->
+          <div class="settings-section">
+            <h3 class="settings-section-title" data-i18n="homeCountrySettings">本国设置</h3>
+            <p class="settings-section-desc" data-i18n="homeCountryDesc">设置本国后，自动模式下会根据坐标判断本国/非本国使用不同服务商。</p>
+
+            <label class="field-label" data-i18n="homeCountries">本国</label>
+            <div class="country-chips" id="countryChips"></div>
+
+            <label class="field-label" data-i18n="domesticProvider">本国服务商</label>
+            <select id="settingDomesticProvider" class="input-field">
+              <option value="" data-i18n-text="domesticProviderPlaceholder">选择本国使用的服务商</option>
+            </select>
+
+            <label class="field-label" data-i18n="foreignProvider">非本国服务商</label>
+            <select id="settingForeignProvider" class="input-field">
+              <option value="" data-i18n-text="foreignProviderPlaceholder">选择非本国使用的服务商</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-footer">
+          <button class="btn btn-accent btn-lg" id="btnSaveSettings">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+            <span data-i18n="saveSettings">保存设置</span>
+          </button>
+          <span class="save-feedback hidden" id="saveFeedback" data-i18n="settingsSaved">设置已保存</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
